@@ -1,3 +1,8 @@
+/*
+ * Project Name: Login Server (https://github.com/rseeber/loginServer)
+ * Author: River Seeber (https://rseeber.github.io)
+ * Libraries used: logMan by River Seeber (https://github.com/rseeber/loginManager)
+*/
 #include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
