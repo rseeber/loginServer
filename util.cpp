@@ -6,6 +6,7 @@
 
 #include "util.hpp"
 
+// returns the listening socket. Terminates program on failure.
 int Socket(){
     int listenfd;
     if ((listenfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
@@ -15,6 +16,7 @@ int Socket(){
     return listenfd;
 }
 
+// Terminates program on failure.
 void Bind(int listenfd, struct sockaddr* sockAddr){
     if (bind(listenfd, (struct sockaddr*) sockAddr, sizeof(*sockAddr)) < 0) {
         perror("bind failed");
@@ -22,6 +24,7 @@ void Bind(int listenfd, struct sockaddr* sockAddr){
     }
 }
 
+// Terminates program on failure.
 void Listen(int listenfd, int n){
     if (listen(listenfd, n) < 0) {
         perror("listen");
@@ -29,6 +32,7 @@ void Listen(int listenfd, int n){
     }
 }
 
+// Returns the connection socket. Terminates program on failure.
 int Accept(int listenfd, struct sockaddr* sockAddr, socklen_t* addrlen){
     int sockfd;
     if ((sockfd = accept(listenfd, (struct sockaddr*) sockAddr, addrlen)) < 0) {
@@ -38,6 +42,7 @@ int Accept(int listenfd, struct sockaddr* sockAddr, socklen_t* addrlen){
     return sockfd;
 }
 
+//starts everything up to prepare for the Accept() call. Returns the listening socket.
 int networkInit(struct sockaddr_in &sockAddr, socklen_t addrlen){
     // Creating socket file descriptor
     // SOCKET()
@@ -63,6 +68,7 @@ int networkInit(struct sockaddr_in &sockAddr, socklen_t addrlen){
     return listenfd;
 }
 
+// handles a single network connection, then closes that connection on completion
 int handleConnection(int sockfd){
     //loop (do 1 time)
     for(int i = 0; i < 1; ++i){
