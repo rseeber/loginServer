@@ -30,6 +30,7 @@ lib/
 *.dylib
 
 # Executables
+bin/
 *.exe
 *.out
 *.app

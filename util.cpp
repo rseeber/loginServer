@@ -3,8 +3,12 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <iostream>
+#include <sstream>
 
 #include "util.hpp"
+
+using namespace std;
 
 // returns the listening socket. Terminates program on failure.
 int Socket(){
@@ -75,15 +79,32 @@ int handleConnection(int sockfd){
         // READ()
         char buf[MAX] = { 0 };
         ssize_t n = read(sockfd, buf, MAX - 1); 
-        printf("%s\n", buf);
+        //printf("[CLIENT]: '%s'\n", buf);
     
-        strcpy(buf, "Hello, world\n");
-    
+        //read request, generate response
+        string response = generateResponse(buf);
+
         // SEND()
-        send(sockfd, buf, strlen(buf), 0);
-        printf("Hello message sent\n");
+        send(sockfd, response.c_str(), response.length(), 0);
+        printf("[SERVER]: '%s'\n", buf);
     
         // CLOSE()
         close(sockfd);
     }
+    return 0;
+}
+
+//returns string of the response for the given request.
+string generateResponse(char* req){
+    //use stringstream so we can read formatted input from the req
+    stringstream msg;
+    msg.str(req);
+
+    //read the first line of request header
+    string method, resource, protocol;
+    msg >> method >> resource >> protocol;
+    
+    // set the response (just set it to requested resource)
+    string response = resource;
+    return response;
 }
