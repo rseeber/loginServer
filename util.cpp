@@ -117,7 +117,7 @@ string generateResponse(char* req){
     ifstream f;
     f.open("./web"+resource);
     //if we can't properly open it
-    if(f.bad()){
+    if(!f.good()){
         //404 error
         resource = "/404.html";
         f.open("./web"+resource);
