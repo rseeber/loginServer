@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <iostream>
+#include <fstream>
 #include <sstream>
 
 #include "util.hpp"
@@ -85,8 +86,11 @@ int handleConnection(int sockfd){
         string response = generateResponse(buf);
 
         // SEND()
-        send(sockfd, response.c_str(), response.length(), 0);
-        printf("[SERVER]: '%s'\n", buf);
+        int cnt = 0;
+        while(cnt < response.length()){
+            cnt += send(sockfd, response.c_str(), response.length(), 0);
+        }
+        //printf("[SERVER]: '%s'\n", response.c_str());
     
         // CLOSE()
         close(sockfd);
@@ -95,6 +99,7 @@ int handleConnection(int sockfd){
 }
 
 //returns string of the response for the given request.
+//parse the input for the requested file, read the file, and return its contents
 string generateResponse(char* req){
     //use stringstream so we can read formatted input from the req
     stringstream msg;
@@ -104,7 +109,27 @@ string generateResponse(char* req){
     string method, resource, protocol;
     msg >> method >> resource >> protocol;
     
-    // set the response (just set it to requested resource)
-    string response = resource;
+    if(strcmp(resource.c_str(), "/") == 0){
+        resource.assign("/index.html");
+    }
+
+    //open the requested file
+    ifstream f;
+    f.open("./web"+resource);
+    //if we can't properly open it
+    if(f.bad()){
+        //404 error
+        resource = "/404.html";
+        f.open("./web"+resource);
+    }
+
+    //write the file to response
+    string response, temp;
+
+    while(getline(f, temp)){
+        response += temp+"\n";
+    }
+
+    // return the file
     return response;
 }

@@ -22,6 +22,8 @@ int main(int argc, char const* argv[])
     // Initialize the network listening
     listenfd = networkInit(sockAddr, addrlen);
 
+    printf("Waiting for connections...\n");
+
     //loop to handle new connections until kill signal
     while(1){
         // ACCEPT()
